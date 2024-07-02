@@ -1,0 +1,32 @@
+{
+  "scripts": {
+    "genearte:rsa": "wrangler src/generateRsa.ts",
+    "dev": "wrangler dev src/index.ts --port 3001",
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "lint": "eslint ./src",
+    "prettier": "prettier --write src/",
+    "lint:fix": "yarn lint --fix",
+    "migration:generate": "drizzle-kit generate:sqlite",
+    "migration:run:local": "wrangler d1 migrations apply my-database --local",
+    "migration:run:cloud": "wrangler d1 migrations apply my-database",
+    "migration:run": "yarn migration:run:local"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "drizzle-kit": "^0.20.17",
+    "drizzle-orm": "^0.30.10",
+    "hono": "^4.2.9",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240403.0",
+    "@eslint/js": "^9.2.0",
+    "@types/bcrypt": "^5.0.2",
+    "eslint": "^9.2.0",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.2.0",
+    "typescript-eslint": "^7.9.0",
+    "wrangler": "^3.47.0"
+  }
+}

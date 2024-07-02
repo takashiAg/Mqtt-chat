@@ -1,0 +1,4 @@
+SECRET_KEY = "SECRET_KEY"
+
+PRIVATE_KEY = -----BEGIN PRIVATE KEY-----\nhogehoge\n-----END PRIVATE KEY-----
+PUBLIC_KEY = -----BEGIN PUBLIC KEY-----\nfugafuga\n-----END PUBLIC KEY-----

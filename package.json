@@ -1,0 +1,15 @@
+{
+  "dependencies": {},
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "install:all": "concurrently \"yarn install:auth\" \"yarn install:api\" \"yarn install\"",
+    "install:auth": "yarn --cwd ./auth install",
+    "install:api": "yarn --cwd ./api install",
+    "dev": "concurrently \"yarn dev:auth\" \"yarn dev:api\"",
+    "dev:auth": "yarn --cwd ./auth dev",
+    "dev:api": "yarn --cwd ./api dev"
+  }
+}
