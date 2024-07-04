@@ -7,6 +7,7 @@ import { env } from "hono/adapter";
 import { cors } from "hono/cors";
 import { room, message } from "./schema";
 import { drizzle } from "drizzle-orm/d1";
+import mqtt from "mqtt"; // import namespace "mqtt"
 
 const loginPage = html`
   <form>
@@ -24,7 +25,13 @@ type Bindings = {
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
-app.use("/*", cors());
+app.use(
+  "/*",
+  cors({
+    origin: ["http://localhost:5173"], // 本番と開発環境のURL
+    credentials: true,
+  })
+);
 app.use("/*", sessionMiddleware);
 
 app.get("/", (c) => {
@@ -62,7 +69,7 @@ app.get("/room", async (c: Context) => {
   const db = drizzle(c.env.DB);
   const result = await db.select().from(room);
 
-  return c.json({ message: "created", userId, result: result });
+  return c.json(result);
 });
 
 /*
@@ -82,14 +89,16 @@ app.post("/message", async (c: Context) => {
   const session = await c.get("session");
   const userId = (await session.get("id")) as string;
 
-  console.log(roomId, userId, messageText);
-
   const db = drizzle(c.env.DB);
   const result = await db
     .insert(message)
     .values({ roomId, message: messageText, userId })
     .execute();
   const messageId = result.meta.last_row_id;
+
+  // TODO: ハードコーディングしちゃったけど、ここは環境変数とかで設定できるようにしたい
+  const client = await mqtt.connectAsync("mqtt://localhost:15675");
+  await client.publishAsync(`room/${roomId}`, "you should reload message");
 
   return c.json({ message: "created", messageId });
 });
@@ -107,7 +116,7 @@ app.get("/message", async (c: Context) => {
   const userId = await session.get("id");
 
   // 一旦500になるけど無視！
-  const roomId = parseInt((await c.req.query("room-id")) ?? "");
+  const roomId = parseInt((await c.req.query("roomId")) ?? "");
 
   const db = drizzle(c.env.DB);
   const result = await db
@@ -115,7 +124,7 @@ app.get("/message", async (c: Context) => {
     .from(message)
     .where(eq(message.roomId, roomId));
 
-  return c.json({ message: "you got message", result: result });
+  return c.json(result);
 });
 
 app.post("/verify-token", async (c: Context) => {

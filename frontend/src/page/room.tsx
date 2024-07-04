@@ -9,10 +9,12 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import Input from "../components/input";
 import Button from "../components/button";
+import mqtt from "mqtt"; // import namespace "mqtt"
+import { message } from "../../../api/src/schema";
 
 const Form = styled(Container).attrs({ as: "form" })`
   flex-direction: row;
-  position: fixed;
+  position: sticky;
   bottom: 0;
   width: 100%;
   left: 0;
@@ -54,6 +56,31 @@ const Room = () => {
 
   useEffect(() => {
     messages.execute({ roomId });
+  }, [roomId]);
+
+  // let client;
+  useEffect(() => {
+    const topic = `room/${roomId}`;
+
+    // TODO: ハードコーディングしちゃったけど、ここは環境変数とかで設定できるようにしたい
+    const client = mqtt.connectAsync("mqtt://localhost:15675", {});
+    client.then((client) => {
+      client.subscribe(topic, function (err) {
+        if (!err) {
+          client.publish(topic, "Hello mqtt");
+        }
+      });
+
+      client.on("message", function (topic, message) {
+        // message is Buffer
+        const messageText = message.toString();
+        console.log({ messageText });
+        if (topic !== `room/${roomId}`) return;
+        messages.execute({ roomId });
+        // client.end();
+      });
+    });
+    return () => {};
   }, [roomId]);
   return (
     <Container>
