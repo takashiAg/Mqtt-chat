@@ -1,6 +1,6 @@
-# shanai-sns
+# mqtt でいい感じに pubsub してリアルタイムにチャットするやつ
 
-SNS 的な感じ
+![動画](./docs/preview.gif)
 
 ## 構成図
 
