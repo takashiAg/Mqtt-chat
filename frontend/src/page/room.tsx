@@ -71,12 +71,15 @@ const Room = () => {
         }
       });
 
-      client.on("message", function (topic, message) {
+      client.on("message", async function (topic, message) {
         // message is Buffer
         const messageText = message.toString();
         console.log({ messageText });
         if (topic !== `room/${roomId}`) return;
-        messages.execute({ roomId });
+        await messages.execute({ roomId });
+        const element = document.documentElement;
+        const bottom = element.scrollHeight - element.clientHeight;
+        window.scroll(0, bottom);
         // client.end();
       });
     });
