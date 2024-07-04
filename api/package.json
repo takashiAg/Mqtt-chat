@@ -2,13 +2,26 @@
   "scripts": {
     "dev": "wrangler dev src/index.ts --port 3002",
     "deploy": "wrangler deploy --minify src/index.ts",
-    "setup:kv": "wrangler kv:namespace create \"SAMPLE_KV\""
+    "setup:kv": "wrangler kv:namespace create \"SAMPLE_KV\"",
+    "prettier": "prettier --write src/",
+    "lint:fix": "yarn lint --fix",
+    "migration:generate": "drizzle-kit generate:sqlite",
+    "migration:run:local": "wrangler d1 migrations apply iot-system-api --local",
+    "migration:run:cloud": "wrangler d1 migrations apply iot-system-api",
+    "migration:run": "yarn migration:run:local"
   },
   "dependencies": {
-    "hono": "^4.2.9"
+    "drizzle-kit": "^0.20.17",
+    "drizzle-orm": "^0.30.10",
+    "hono": "^4.2.9",
+    "prettier": "^3.2.5"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240403.0",
+    "@eslint/js": "^9.2.0",
+    "eslint": "^9.2.0",
+    "eslint-config-prettier": "^9.1.0",
+    "typescript-eslint": "^7.9.0",
     "wrangler": "^3.47.0"
   }
 }

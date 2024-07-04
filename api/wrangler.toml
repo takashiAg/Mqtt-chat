@@ -15,7 +15,8 @@ id = "a6b7214e46654126b148b4da9ef8ea8b"
 [[d1_databases]]
 binding = "DB" # i.e. available in your Worker on env.DB
 database_name = "iot-system-api"
-database_id = "4c2814b7-4f6a-4e09-8c8c-f0a6f68c5d9d"
+database_id = "2d8f9222-16f3-4a4e-a901-39edd7ddbca2"
+migrations_dir = "drizzle/migrations"
 
 # [ai]
 # binding = "AI"
