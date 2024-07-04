@@ -1,12 +1,12 @@
-name = "shanaisns-api"
+name = "iot-system-api"
 compatibility_date = "2023-12-01"
 
 # [vars]
 # MY_VAR = "my-variable"
 
-# [[kv_namespaces]]
-# binding = "MY_KV_NAMESPACE"
-# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+[[kv_namespaces]]
+binding = "SAMPLE_KV"
+id = "a6b7214e46654126b148b4da9ef8ea8b"
 
 # [[r2_buckets]]
 # binding = "MY_BUCKET"
@@ -14,7 +14,7 @@ compatibility_date = "2023-12-01"
 
 [[d1_databases]]
 binding = "DB" # i.e. available in your Worker on env.DB
-database_name = "shanaisns-auth"
+database_name = "iot-system-api"
 database_id = "4c2814b7-4f6a-4e09-8c8c-f0a6f68c5d9d"
 
 # [ai]

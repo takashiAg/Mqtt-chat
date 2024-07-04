@@ -1,0 +1,40 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: API for user registration and login
+  version: 1.0.0
+servers:
+  - url: http://localhost:3002
+paths:
+  /verify-token:
+    post:
+      summary: ユーザーログイン
+      description: 登録済みユーザーのログインを行うAPI。
+      responses:
+        "200":
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User logged in successfully"
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid email or password"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

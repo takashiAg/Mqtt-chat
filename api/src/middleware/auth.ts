@@ -1,18 +1,12 @@
-import * as crypto from "./crypto";
-import * as jwt from "./jwt";
-
-interface JwtPayload {
-  email: string;
-  id: string;
-}
+import * as crypto from "../lib/crypto";
+import * as jwt from "../lib/jwt";
 
 export async function getToken(
-  { email, id }: JwtPayload,
+  email: string,
   PRIVATE_KEY: string
 ): Promise<string> {
   const jwtPayload = {
     email,
-    id,
   };
 
   const importPrivateKey = await crypto.importPrivateKey(PRIVATE_KEY);

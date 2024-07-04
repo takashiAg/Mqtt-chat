@@ -10,8 +10,6 @@ import * as auth from "./utils/auth";
 type Bindings = {
   DB: D1Database;
 
-  // environment variables
-  // SECRET_KEY: string;
   PRIVATE_KEY: string;
   PUBLIC_KEY: string;
 };
@@ -35,8 +33,19 @@ app.post("/signup", async (c) => {
 
   await db.insert(user).values({ email, password: hashedPassword }).execute();
 
+  const result = await db
+    .select()
+    .from(user)
+    .where(eq(user.email, email))
+    .limit(1);
+  const foundUser = result?.[0];
+  if (!foundUser) throw new Error("user not found");
+
   const PRIVATE_KEY = env(c)?.PRIVATE_KEY;
-  const token = await auth.getToken(email, PRIVATE_KEY);
+  const token = await auth.getToken(
+    { email, id: `{foundUser.id}` },
+    PRIVATE_KEY
+  );
 
   return c.json({ token });
 });
@@ -58,14 +67,17 @@ app.post("/signin", async (c) => {
     .where(eq(user.email, email))
     .limit(1);
 
-  const result2 = result?.[0];
-  if (!result2) throw new Error("user not found");
+  const foundUser = result?.[0];
+  if (!foundUser) throw new Error("user not found");
 
-  const isAuthenticated = await hash.compare(result2?.password, password);
+  const isAuthenticated = await hash.compare(foundUser?.password, password);
   if (!isAuthenticated) throw new Error("user not found");
 
   const PRIVATE_KEY = env(c)?.PRIVATE_KEY;
-  const token = await auth.getToken(email, PRIVATE_KEY);
+  const token = await auth.getToken(
+    { email, id: `${foundUser.id}` },
+    PRIVATE_KEY
+  );
 
   return c.json({ token });
 });

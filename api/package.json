@@ -1,7 +1,8 @@
 {
   "scripts": {
-    "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy --minify src/index.ts"
+    "dev": "wrangler dev src/index.ts --port 3002",
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "setup:kv": "wrangler kv:namespace create \"SAMPLE_KV\""
   },
   "dependencies": {
     "hono": "^4.2.9"
