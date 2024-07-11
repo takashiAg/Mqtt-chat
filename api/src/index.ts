@@ -28,7 +28,7 @@ const app = new Hono<{ Bindings: Bindings }>();
 app.use(
   "/*",
   cors({
-    origin: ["http://localhost:5173"], // 本番と開発環境のURL
+    origin: ["http://localhost:3000"], // 本番と開発環境のURL
     credentials: true,
   })
 );

@@ -10,6 +10,8 @@
     "install:api": "yarn --cwd ./api install",
     "dev": "concurrently \"yarn dev:auth\" \"yarn dev:api\"",
     "dev:auth": "yarn --cwd ./auth dev",
-    "dev:api": "yarn --cwd ./api dev"
+    "dev:api": "yarn --cwd ./api dev",
+    "dev:frontend": "yarn --cwd ./frontend dev",
+    "dev:pubsub": "yarn --cwd ./pubsub dev"
   }
 }
