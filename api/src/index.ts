@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import * as auth from "./middleware/auth";
 import { env } from "hono/adapter";
 import { cors } from "hono/cors";
-import { room, message } from "./schema";
+import { room, message, user, userTag } from "./schema";
 import { drizzle } from "drizzle-orm/d1";
 import mqtt from "mqtt"; // import namespace "mqtt"
 
@@ -124,7 +124,66 @@ app.get("/message", async (c: Context) => {
     .from(message)
     .where(eq(message.roomId, roomId));
 
+  const messages = result.map((m) => {
+    return {
+      ...m,
+      mine: m.userId === userId,
+    };
+  });
+
   return c.json(result);
+});
+
+/*
+ * ユーザー更新
+ */
+
+type UpdateUserDto = {
+  name: string;
+};
+app.put("/user", async (c: Context) => {
+  const params = await c.req.json<UpdateUserDto>();
+
+  const name = params.name;
+
+  const session = await c.get("session");
+  const userId = (await session.get("id")) as string;
+
+  const db = drizzle(c.env.DB);
+  const result = await db
+    .update(user)
+    .set({ name })
+    .where(eq(user.id, userId))
+    .execute();
+
+  return c.json({ message: "updated" });
+});
+
+/*
+ * ユーザー取得
+ */
+
+app.get("/user/:userId", async (c: Context) => {
+  const userIdQuery = (await c.req.param("userId")) ?? "";
+
+  const loginUserId = (await (await c.get("session")).get("id")) ?? "";
+
+  const userId = parseInt(userIdQuery === "me" ? loginUserId : userIdQuery);
+
+  const db = drizzle(c.env.DB);
+  const result = await db
+    .select()
+    .from(user)
+    .where(eq(user.id, userId))
+    .limit(1);
+
+  const targetUser = result?.[0];
+
+  if (!targetUser) return c.json({ message: "user not found" }, 404);
+
+  const tag = await db.select().from(userTag).where(eq(userTag.userId, userId));
+
+  return c.json({ ...targetUser, tag });
 });
 
 app.post("/verify-token", async (c: Context) => {
@@ -134,7 +193,21 @@ app.post("/verify-token", async (c: Context) => {
 
   const PUBLIC_KEY = env(c)?.PUBLIC_KEY;
 
-  const { email, id, ...payload } = await auth.verifyToken(token, PUBLIC_KEY);
+  const {
+    email,
+    id: _id,
+    ...payload
+  } = await auth.verifyToken(token, PUBLIC_KEY);
+
+  const id = parseInt(_id);
+
+  const db = drizzle(c.env.DB);
+  const userResult = await db
+    .select()
+    .from(user)
+    .where(eq(user.id, id))
+    .limit(1);
+  if (!userResult?.[0]) await db.insert(user).values({ id }).execute();
 
   const session = await c.get("session");
   await session.set("email", email);

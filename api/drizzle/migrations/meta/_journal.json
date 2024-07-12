@@ -8,6 +8,20 @@
       "when": 1720104401508,
       "tag": "0000_spotty_hemingway",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1720747084400,
+      "tag": "0001_peaceful_taskmaster",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1720755410511,
+      "tag": "0002_black_professor_monster",
+      "breakpoints": true
     }
   ]
 }
