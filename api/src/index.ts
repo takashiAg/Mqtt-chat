@@ -131,7 +131,7 @@ app.get("/message", async (c: Context) => {
     };
   });
 
-  return c.json(result);
+  return c.json(messages);
 });
 
 /*

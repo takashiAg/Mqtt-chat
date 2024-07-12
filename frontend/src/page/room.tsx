@@ -10,7 +10,6 @@ import { useEffect } from "react";
 import Input from "../components/input";
 import Button from "../components/button";
 import mqtt from "mqtt"; // import namespace "mqtt"
-import { message } from "../../../api/src/schema";
 
 const Form = styled(Container).attrs({ as: "form" })`
   flex-direction: row;
@@ -19,18 +18,21 @@ const Form = styled(Container).attrs({ as: "form" })`
   width: 100%;
   left: 0;
   right: 0;
-  padding: 20px;
+  padding: 20px 0;
   gap: 20px;
   height: 100px;
 `;
-const TextInput = styled(Input).attrs({ as: "textarea", rows: 3 })`
+const TextInput = styled(Input).attrs({ as: "textarea" })`
   flex-basis: 100%;
+  height: 100%;
   resize: none;
+  margin: 0;
 `;
 const SubmitButton = styled(Button)`
   flex-basis: 100px;
   flex-shrink: 0;
   flex-grow: 0;
+  margin: 0;
 `;
 
 interface MessageProps {
@@ -38,7 +40,11 @@ interface MessageProps {
 }
 const Message = styled(Container)<MessageProps>`
   flex-direction: row;
-  justify-content: ${(props) => (props.mine ? "flex-end" : "flex-start")};
+  align-self: ${(props) => (props.mine ? "flex-end" : "flex-start")};
+  width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
 `;
 
 const Room = () => {
@@ -89,7 +95,7 @@ const Room = () => {
     <Container>
       <Header>{room.name}</Header>
       {messages?.data?.map?.((message) => (
-        <Message>{message.message}</Message>
+        <Message mine={message?.mine || false}>{message.message}</Message>
       ))}
       <Form onSubmit={handleSubmit}>
         <TextInput name="message" />

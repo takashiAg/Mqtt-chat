@@ -1,16 +1,15 @@
-import useAuth from "./useAuth";
+import useApi from "./useApi";
 
-const method = "post";
-const path = "/signin";
+const method = "put";
+const path = "/user";
 const eagerLoad = false;
 
 interface Input {
-  email: string;
-  password: string;
+  name: string;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components, react-hooks/rules-of-hooks
-export default useAuth<unknown, Input>({
+export default useApi<unknown, Input>({
   path,
   method,
   eagerLoad,

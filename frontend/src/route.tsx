@@ -6,6 +6,8 @@ import NotFound from "./page/404.tsx";
 import RoomCreate from "./page/room-new.tsx";
 import Signin from "./page/signin.tsx";
 import Signup from "./page/signup.tsx";
+import UserEdit from "./page/user-edit.tsx";
+
 import { useGlobalState } from "./states/auth.hook.tsx";
 
 const Router = () => {
@@ -28,8 +30,9 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Rooms />} />
         <Route path="/room" element={<Rooms />} />
-        <Route path="room/:roomId" element={<Room />} />
-        <Route path="room/create" element={<RoomCreate />} />
+        <Route path="/room/:roomId" element={<Room />} />
+        <Route path="/room/create" element={<RoomCreate />} />
+        <Route path="/user" element={<UserEdit />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
